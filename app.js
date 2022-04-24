@@ -1,0 +1,28 @@
+var express = require('express');
+const dotenv = require('dotenv');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+var logger = require('morgan');
+
+require('./Database/config');
+const envConfig = dotenv.config({path : path.join(__dirname,'./config.env')})
+if(envConfig.error){
+    console.log(`dotEnv config error : ${envConfig.error.message}`);
+}
+
+
+
+var indexRouter = require('./routes/index');
+
+var app = express();
+
+app.use(logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/api', indexRouter);
+
+
+module.exports = app;
